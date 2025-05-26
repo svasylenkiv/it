@@ -97,67 +97,59 @@ winrm quickconfig
 🔒 1. WinRM не налаштований або не працює на машині
 Перевірте, чи служба WinRM запущена на Windows-сервері:
 
-powershell
-Копіювати
-Редагувати
+```powershell
 Get-Service WinRM
+```
 Якщо не запущена:
-
-powershell
-Копіювати
-Редагувати
+```powershell
 Start-Service WinRM
+```
 Перевірте, чи створений HTTPS listener (порт 5986):
-
-powershell
-Копіювати
-Редагувати
+```powershell
 winrm enumerate winrm/config/Listener
-Якщо його немає, створіть:
+```
 
-powershell
-Копіювати
-Редагувати
+Якщо його немає, створіть:
+```powershell
 winrm create winrm/config/Listener?Address=*+Transport=HTTPS @{Hostname="hostname";CertificateThumbprint="THUMBPRINT"}
+
 🔐 2. Немає SSL-сертифікату для WinRM HTTPS
 WinRM через HTTPS вимагає SSL-сертифікат. Перевірте, чи встановлений коректний сертифікат у Cert:\LocalMachine\My.
 
 Можна створити самопідписаний:
 
-powershell
-Копіювати
-Редагувати
+```powershell
 New-SelfSignedCertificate -DnsName "hostname" -CertStoreLocation Cert:\LocalMachine\My
+```
 Після цього додайте thumbprint у Listener (див. п.1).
 
 🌐 3. Порт 5986 заблокований між машинами
 З комп’ютера, з якого запускаєш Ansible:
 
-bash
-Копіювати
-Редагувати
+```bash
 nc -zv 192.168.0.30 5986
+```
 або:
-
-bash
-Копіювати
-Редагувати
+```bash
 telnet 192.168.0.30 5986
-Якщо порт закритий — відкрий у Windows Firewall:
+```
 
-powershell
-Копіювати
-Редагувати
+Якщо порт закритий — відкрий у Windows Firewall:
+```powershell
 New-NetFirewallRule -Name "AllowWinRM" -DisplayName "Allow WinRM HTTPS" -Enabled True -Profile Any -Action Allow -Direction Inbound -Protocol TCP -LocalPort 5986
+```
 ⚙️ 4. WinRM не налаштований на дозволи віддаленого доступу
 Запусти:
+```powershell
+Set-NetConnectionProfile -NetworkCategory Private
+```
+Потім налаштуй WinRM:
 
-powershell
-Копіювати
-Редагувати
+```cmd
 winrm quickconfig -q
 winrm set winrm/config/service @{AllowUnencrypted="false"}
 winrm set winrm/config/service/auth @{Basic="true"}
+```
 📋 5. Ansible неправильно налаштовано
 У inventory або host_vars для LHC-101 повинно бути:
 
