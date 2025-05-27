@@ -6,18 +6,18 @@
 
 ## 🔧 1. Через PowerShell
 
+### Знайти неініціалізовані диски
 ```powershell
-# Знайти неініціалізовані диски
 Get-Disk | Where-Object PartitionStyle -Eq 'RAW'
 ```
-# Ініціалізувати диск (наприклад, диск №1)
+### Ініціалізувати диск (наприклад, диск №1)
 ```powershell
 Initialize-Disk -Number 1 -PartitionStyle GPT
 ```
-# Створити розділ, присвоїти літеру і відформатувати
+### Створити розділ, присвоїти літеру і відформатувати
 ```powershell
 New-Partition -DiskNumber 1 -UseMaximumSize -AssignDriveLetter | `
-Format-Volume -FileSystem NTFS -NewFileSystemLabel "NewDisk" -Confirm:$false
+Format-Volume -FileSystem NTFS -NewFileSystemLabel "Data" -Confirm:$false
 ```
 
 > 🔎 *PartitionStyle може бути: `GPT` або `MBR`. GPT — рекомендований для сучасних систем.*
@@ -29,21 +29,21 @@ Format-Volume -FileSystem NTFS -NewFileSystemLabel "NewDisk" -Confirm:$false
 ```cmd
 diskpart
 ```
-
-Усередині інтерфейсу DiskPart:
-
+### Усередині інтерфейсу DiskPart:
 ```diskpart
 list disk
 ```
-```diskpart
 # Вибери диск, який потрібно ініціалізувати
-select disk 1         # Вкажи свій номер диска
-```
 ```diskpart
-clean                 # Очистить всі дані на диску
+select disk 1
 ```
+# Очистить всі дані на диску
 ```diskpart
-convert gpt           # Або convert mbr
+clean
+```
+### Вибери стиль розділу (GPT або MBR)
+```diskpart
+convert gpt
 ```
 ```diskpart
 create partition primary
@@ -51,8 +51,8 @@ create partition primary
 ```diskpart
 format fs=ntfs quick
 ```
+### Присвоїти літеру диску
 ```diskpart
-# Присвоїти літеру диску
 assign letter=E
 ```
 ```diskpart
