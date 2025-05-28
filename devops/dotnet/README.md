@@ -1,5 +1,10 @@
 ### MinimalApp
 This is a minimal .NET application that can be used as a starting point for your projects. It includes basic configurations and dependencies to help you get started quickly.
+
+### Prerequisites
+- dotnet-hosting-8.0.16-win
+- dotnet-sdk-8.0.410-win-x64
+
 ### Getting Started
 To get started with this minimal .NET application, follow these steps:
 1. **Clone the Repository**: 
