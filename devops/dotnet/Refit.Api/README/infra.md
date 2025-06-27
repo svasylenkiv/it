@@ -129,12 +129,19 @@ EOF
 ```
 
 Потім зареєструй:
-
+### Реєстрація ECS Task Definition
+### envsubst для заміни змінних у JSON
 ```bash
 envsubst < task-def.json > rendered-task-def.json
 
 aws ecs register-task-definition \
   --cli-input-json file://rendered-task-def.json \
+  --region "$REGION"
+```
+
+```bash
+aws ecs register-task-definition \
+  --cli-input-json file://task-def.json \
   --region "$REGION"
 ```
 
