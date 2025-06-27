@@ -117,7 +117,7 @@ cat > task-def.json <<EOF
       "image": "${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${REPO_NAME}:latest",
       "portMappings": [
         {
-          "containerPort": 8080,
+          "containerPort": ${CONTAINER_PORT},
           "protocol": "tcp"
         }
       ],
@@ -126,7 +126,6 @@ cat > task-def.json <<EOF
   ]
 }
 EOF
-
 ```
 
 Потім зареєструй:
