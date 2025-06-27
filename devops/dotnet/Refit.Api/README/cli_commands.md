@@ -54,7 +54,7 @@ docker build -t $IMAGE . -f Refit.Api/Dockerfile
 ## 4. Запуск локально
 
 ```bash
-docker run -p 5000:8080 -e ASPNETCORE_ENVIRONMENT=Development $IMAGE:latest
+docker run -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Development $IMAGE:latest
 ```
 
 Перевірка в браузері: [http://localhost:5000/swagger/index.html](http://localhost:5000/swagger/index.html)
