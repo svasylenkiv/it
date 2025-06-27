@@ -101,7 +101,9 @@ aws ec2 authorize-security-group-ingress \
 
 Створи файл task-def.json:
 
-```json
+```bash
+echo "📄 Створення файлу task-def.json..."
+cat > task-def.json <<EOF
 {
   "family": "${TASK_NAME}",
   "networkMode": "awsvpc",
@@ -122,6 +124,8 @@ aws ec2 authorize-security-group-ingress \
     }
   ]
 }
+EOF
+
 ```
 
 Потім зареєструй:
