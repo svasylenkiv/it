@@ -9,7 +9,7 @@ NC='\033[0m'
 
 # === 📦 ЗМІННІ ===
 REGION="us-east-1"
-PROJECT="refitapi"
+PROJECT="refit-api"
 ENV="dev"
 
 CLUSTER_NAME="$PROJECT-$ENV-cluster"

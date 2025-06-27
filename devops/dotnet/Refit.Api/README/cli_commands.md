@@ -25,7 +25,8 @@ aws configure
 ```bash
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text) # ID твого AWS акаунта
 REGION=us-east-1         # Регіон AWS
-REPO_NAME=refit-api      # Назва репозиторію ECR
+PROJECT=refit-api
+REPO_NAME="$PROJECT-ecr" # Назва репозиторію ECR
 IMAGE=refit-api          # Локальна назва Docker-образу
 ECR_REPOSITORY=$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME # Повна адреса репозиторію
 ```
