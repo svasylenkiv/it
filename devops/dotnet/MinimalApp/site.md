@@ -1,9 +1,9 @@
 # ===========================
 # 🔧 Конфігураційні змінні
 # ===========================
-$SiteName = "TaskApp"
+$SiteName = "MinimalApp"
 $SitePort = 80
-$SitePath = "D:\TaskApp"
+$SitePath = "D:\MinimalApp"
 
 $SitePath = "C:\inetpub\wwwroot\MinimalApp"
 

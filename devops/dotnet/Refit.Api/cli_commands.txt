@@ -1,0 +1,23 @@
+// To build the Docker image
+
+docker build -t refit-api . -f Refit.Api/Dockerfile
+
+
+// To run the Docker image locally
+
+docker-run -p 5000:8080 -e ASPNETCORE_ENVIRONMENT=Development refit-api:latest
+
+
+// AWS CLI login + Docker login
+
+aws ecr get-login-password --region <REGION> | docker login --username AWS --password-stdin <ECR_REPOSITORY>
+
+
+// Tag the image
+
+docker tag refit-api:latest <ECR_REPOSITORY>/<IMAGE>:latest
+
+
+// Push the image to ECR
+
+docker push <ECR_REPOSITORY>/<IMAGE>:latest
