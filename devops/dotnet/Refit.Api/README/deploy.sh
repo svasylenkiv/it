@@ -9,15 +9,15 @@ NC='\033[0m'
 
 # === 📦 ЗМІННІ ===
 REGION="us-east-1"
-PROJECT="myapp"
+PROJECT="refitapi"
 ENV="dev"
 
 CLUSTER_NAME="$PROJECT-$ENV-cluster"
-REPO_NAME="$PROJECT-$ENV-ecr"
+REPO_NAME="$PROJECT-ecr"
 TASK_NAME="$PROJECT-$ENV-task"
 SERVICE_NAME="$PROJECT-$ENV-service"
 CONTAINER_NAME="$PROJECT-container"
-CONTAINER_PORT=80
+CONTAINER_PORT=8080
 ROLE_NAME="ecsTaskExecutionRole"
 
 # === 🔑 Отримання AWS Account ID ===
