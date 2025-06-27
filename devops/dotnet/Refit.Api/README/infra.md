@@ -7,6 +7,7 @@ ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 export PROJECT="refitapi"
 export REGION="us-east-1"
 export ENV="dev"
+export CONTAINER_PORT="8080"
 
 # === ІМЕНА РЕСУРСІВ ===
 export REPO_NAME="$PROJECT-ecr"
