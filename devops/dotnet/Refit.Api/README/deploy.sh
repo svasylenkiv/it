@@ -11,15 +11,45 @@ NC='\033[0m'
 REGION="us-east-1"
 PROJECT="myapp"
 ENV="dev"
-AWS_ACCOUNT_ID="123456789012"
 
 CLUSTER_NAME="$PROJECT-$ENV-cluster"
 REPO_NAME="$PROJECT-$ENV-ecr"
 TASK_NAME="$PROJECT-$ENV-task"
 SERVICE_NAME="$PROJECT-$ENV-service"
 CONTAINER_NAME="$PROJECT-container"
+CONTAINER_PORT=80
+ROLE_NAME="ecsTaskExecutionRole"
+
+# === 🔑 Отримання AWS Account ID ===
+echo -e "${GREEN}🔑 Отримання AWS Account ID...${NC}"
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 
 echo -e "${GREEN}🚀 Старт деплою ECS Fargate для $PROJECT ($ENV)...${NC}"
+
+# === 🔐 Перевірка чи роль вже існує ===
+echo -e "${GREEN}🔐 Створення IAM ролі для ECS Task Execution (якщо не існує)...${NC}"
+if ! aws iam get-role --role-name "$ROLE_NAME" >/dev/null 2>&1; then
+  aws iam create-role \
+    --role-name "$ROLE_NAME" \
+    --assume-role-policy-document '{
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "ecs-tasks.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    }'
+  
+  aws iam attach-role-policy \
+    --role-name "$ROLE_NAME" \
+    --policy-arn arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+fi
+
+EXEC_ROLE_ARN=$(aws iam get-role --role-name "$ROLE_NAME" --query "Role.Arn" --output text)
 
 # === 🐳 ECR ===
 echo -e "${GREEN}📦 Створення ECR репозиторію...${NC}"
@@ -51,13 +81,14 @@ aws ec2 associate-route-table --subnet-id "$SUBNET2_ID" --route-table-id "$RT_ID
 # === 🔐 Security Group ===
 echo -e "${GREEN}🔐 Створення security group...${NC}"
 SG_ID=$(aws ec2 create-security-group --group-name "$PROJECT-$ENV-sg" --description "Allow HTTP" --vpc-id "$VPC_ID" --query 'GroupId' --output text)
-aws ec2 authorize-security-group-ingress --group-id "$SG_ID" --protocol tcp --port 80 --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id "$SG_ID" --protocol tcp --port $CONTAINER_PORT --cidr 0.0.0.0/0
 
 # === 📄 Task Definition ===
 echo -e "${GREEN}📄 Створення ECS Task Definition...${NC}"
 cat <<EOF > task-def.json
 {
   "family": "$TASK_NAME",
+  "executionRoleArn": "$EXEC_ROLE_ARN",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "256",
@@ -68,7 +99,7 @@ cat <<EOF > task-def.json
       "image": "$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:latest",
       "portMappings": [
         {
-          "containerPort": 80,
+          "containerPort": $CONTAINER_PORT,
           "protocol": "tcp"
         }
       ],
