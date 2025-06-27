@@ -11,17 +11,13 @@ NC='\033[0m'
 REGION="us-east-1"
 PROJECT="myapp"
 ENV="dev"
+AWS_ACCOUNT_ID="123456789012"
 
 CLUSTER_NAME="$PROJECT-$ENV-cluster"
 REPO_NAME="$PROJECT-$ENV-ecr"
 TASK_NAME="$PROJECT-$ENV-task"
 SERVICE_NAME="$PROJECT-$ENV-service"
 CONTAINER_NAME="$PROJECT-container"
-CONTAINER_PORT=8080
-
-# === 🔑 Отримання AWS Account ID ===
-echo -e "${GREEN}🔑 Отримання AWS Account ID...${NC}"
-AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 
 echo -e "${GREEN}🚀 Старт деплою ECS Fargate для $PROJECT ($ENV)...${NC}"
 
@@ -55,7 +51,7 @@ aws ec2 associate-route-table --subnet-id "$SUBNET2_ID" --route-table-id "$RT_ID
 # === 🔐 Security Group ===
 echo -e "${GREEN}🔐 Створення security group...${NC}"
 SG_ID=$(aws ec2 create-security-group --group-name "$PROJECT-$ENV-sg" --description "Allow HTTP" --vpc-id "$VPC_ID" --query 'GroupId' --output text)
-aws ec2 authorize-security-group-ingress --group-id "$SG_ID" --protocol tcp --port $CONTAINER_PORT --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id "$SG_ID" --protocol tcp --port 80 --cidr 0.0.0.0/0
 
 # === 📄 Task Definition ===
 echo -e "${GREEN}📄 Створення ECS Task Definition...${NC}"
@@ -72,7 +68,7 @@ cat <<EOF > task-def.json
       "image": "$AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME:latest",
       "portMappings": [
         {
-          "containerPort": $CONTAINER_PORT,
+          "containerPort": 80,
           "protocol": "tcp"
         }
       ],
