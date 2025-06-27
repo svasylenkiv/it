@@ -57,7 +57,7 @@ docker build -t $IMAGE . -f Refit.Api/Dockerfile
 docker run -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Development $IMAGE:latest
 ```
 
-Перевірка в браузері: [http://localhost:5000/swagger/index.html](http://localhost:5000/swagger/index.html)
+Перевірка в браузері: [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
 
 ---
 
