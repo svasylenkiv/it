@@ -1,0 +1,50 @@
+
+# Встановлення Minikube і kubectl на Windows
+
+## Варіант 1: Встановлюємо через Chocolatey (рекомендовано)
+
+1. **Запусти PowerShell від імені адміністратора.**
+2. **Виконай команду:**
+
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force; `
+[System.Net.ServicePointManager]::SecurityProtocol = `
+[System.Net.ServicePointManager]::SecurityProtocol -bor 3072; `
+iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+```
+
+3. **Закрий PowerShell і відкрий знову** (щоб оновилась змінна PATH).
+4. **Перевір встановлення:**
+```powershell
+choco -v
+```
+Якщо бачиш версію — все ок.
+
+5. **Ставимо пакети:**
+```powershell
+choco install minikube kubernetes-cli virtualbox -y
+```
+> **Примітка:** Можна замінити VirtualBox на Hyper-V, якщо є Pro-версія Windows і ввімкнений Hyper-V.
+
+---
+
+## Варіант 2: Встановлюємо вручну
+
+### Minikube:
+- Скачай [Minikube Installer](https://github.com/kubernetes/minikube/releases) → **minikube-installer.exe**.
+- Встанови.
+
+### kubectl:
+- Скачай [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/).
+- Додай у **PATH**.
+
+---
+
+## Після встановлення
+
+Перевір роботу:
+
+```powershell
+minikube version
+kubectl version --client
+```
