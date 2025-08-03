@@ -255,4 +255,4 @@ Write-Host "- Використовуйте 'New-PulumiProject' для створ
 Write-Host "- Налаштуйте AWS credentials перед першим використанням" -ForegroundColor White
 
 Write-Host "`nНатисніть будь-яку клавішу для завершення..."
-$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown") 
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
