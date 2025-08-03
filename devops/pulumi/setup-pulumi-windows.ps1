@@ -36,7 +36,7 @@ function Install-WingetPackage($packageName, $displayName) {
         }
     }
     catch {
-        Write-Host "❌ Помилка встановлення $displayName: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "❌ Помилка встановлення $displayName : $($_.Exception.Message)" -ForegroundColor Red
         return $false
     }
 }
@@ -99,7 +99,7 @@ if ($awsInstalled) {
 }
 
 if ($azureInstalled) {
-    $azureVersion = az version --output table 2>$null
+    az version --output table 2>$null | Out-Null
     Write-Host "Azure CLI: встановлено" -ForegroundColor Green
 }
 
@@ -254,5 +254,5 @@ Write-Host "- Перезапустіть PowerShell для завантажен�
 Write-Host "- Використовуйте 'New-PulumiProject' для створення нових проектів" -ForegroundColor White
 Write-Host "- Налаштуйте AWS credentials перед першим використанням" -ForegroundColor White
 
-Write-Host "`nНатисніть будь-яку клавішу для завершення..."
+Write-Host "`n Натисніть будь-яку клавішу для завершення..."
 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
