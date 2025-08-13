@@ -7,10 +7,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - myapi.local
-      secretName: myapi-tls
+        - todoapi.local
+      secretName: todoapi-tls
   rules:
-    - host: myapi.local
+    - host: todoapi.local
       http:
         paths:
           - path: /
