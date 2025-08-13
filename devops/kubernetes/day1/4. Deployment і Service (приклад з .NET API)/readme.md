@@ -23,55 +23,71 @@
 ### 📄 Приклад Dockerfile
 
 ```dockerfile
+# Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
+ENV ASPNETCORE_URLS=http://+:80
 EXPOSE 80
 
+# Build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
 RUN dotnet restore
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish -c Release -o /app/publish --no-restore
 
+# Final
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "MyApi.dll"]
+ENTRYPOINT ["dotnet", "TodoApi.dll"]
+
 ```
 
 ### 🔨 Збірка і пуш у Docker Hub
 
 ```powershell
-docker build -t <твій_логін>/myapi:1.0 .
-docker push <твій_логін>/myapi:1.0
+docker login
+cd app
+docker build -t <твій_логін>/todoapi:1.0 .
+docker push <твій_логін>/todoapi:1.0
+```
+
+### 🏷️ Якщо образ вже зібраний локально — лише тег і пуш
+
+```powershell
+docker login
+docker images
+docker tag <локальна_назва_або_ID_образу> <твій_логін>/todoapi:1.0
+docker push <твій_логін>/todoapi:1.0
 ```
 
 ---
 
 ## 2️⃣ Deployment для API
 
-### 📄 myapi-deployment.yaml
+### 📄 todoapi-deployment.yaml
 
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myapi-deployment
+  name: todoapi-deployment
   labels:
-    app: myapi
+    app: todoapi
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: myapi
+      app: todoapi
   template:
     metadata:
       labels:
-        app: myapi
+        app: todoapi
     spec:
       containers:
-        - name: myapi
-          image: <твій_логін>/myapi:1.0
+        - name: todoapi
+          image: <твій_логін>/todoapi:1.0
           ports:
             - containerPort: 80
 ```
@@ -80,16 +96,16 @@ spec:
 
 ## 3️⃣ Service для доступу
 
-### 📄 myapi-service.yaml
+### 📄 todoapi-service.yaml
 
 ```yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: myapi-service
+  name: todoapi-service
 spec:
   selector:
-    app: myapi
+    app: todoapi
   ports:
     - protocol: TCP
       port: 80
@@ -102,8 +118,8 @@ spec:
 ## 4️⃣ Застосування в Kubernetes
 
 ```powershell
-kubectl apply -f myapi-deployment.yaml
-kubectl apply -f myapi-service.yaml
+kubectl apply -f todoapi-deployment.yaml
+kubectl apply -f todoapi-service.yaml
 ```
 
 ---
@@ -113,7 +129,7 @@ kubectl apply -f myapi-service.yaml
 ```powershell
 kubectl get deployments
 kubectl get pods
-kubectl get svc myapi-service
+kubectl get svc todoapi-service
 ```
 
 ---
@@ -121,7 +137,7 @@ kubectl get svc myapi-service
 ## 6️⃣ Доступ до API
 
 ```powershell
-minikube service myapi-service
+minikube service todoapi-service
 ```
 
 > Відкриється браузер, і ти побачиш відповідь API (наприклад, "Hello World").
@@ -137,7 +153,7 @@ minikube service myapi-service
 ### 🔧 Масштабування API
 
 ```powershell
-kubectl scale deployment myapi-deployment --replicas=5
+kubectl scale deployment todoapi-deployment --replicas=5
 ```
 
 ---
