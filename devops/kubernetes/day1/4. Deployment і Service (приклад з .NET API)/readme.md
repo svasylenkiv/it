@@ -12,6 +12,7 @@
 - [4️⃣ Застосування в Kubernetes](#-застосування-в-kubernetes)
 - [5️⃣ Перевірка](#-перевірка)
 - [6️⃣ Доступ до API](#-доступ-до-api)
+- [7️⃣ Зупинка сервісу](#-зупинка-сервісу)
 - [✅ Що ми зробили](#-що-ми-зробили)
 
 ---
@@ -41,7 +42,33 @@ FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "TodoApi.dll"]
+```
 
+### 🔧 Покращений варіант Dockerfile (рекомендований)
+
+> **Примітка:** Назва файлу `TodoApi.dll` може не співпадати з реальною назвою проекту. 
+> Краще використовувати `*.dll` для автоматичного пошуку DLL файлу:
+
+```dockerfile
+# Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+ENV ASPNETCORE_URLS=http://+:80
+EXPOSE 80
+
+# Build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore
+RUN dotnet publish -c Release -o /app/publish --no-restore
+
+# Final
+FROM base AS final
+WORKDIR /app
+COPY --from=build /app/publish .
+# Автоматично знаходить DLL файл проекту
+ENTRYPOINT ["dotnet", "*.dll"]
 ```
 
 ### 🔨 Збірка і пуш у Docker Hub
@@ -130,17 +157,62 @@ kubectl apply -f todoapi-service.yaml
 kubectl get deployments
 kubectl get pods
 kubectl get svc todoapi-service
+kubectl get endpoints todoapi-service
 ```
+
+> Якщо `endpoints` порожній — Pod-и ще не готові або не співпав селектор `app: todoapi`.
 
 ---
 
 ## 6️⃣ Доступ до API
 
 ```powershell
-minikube service todoapi-service
+minikube service todoapi-service --url
 ```
 
-> Відкриється браузер, і ти побачиш відповідь API (наприклад, "Hello World").
+- Перейди за виданою URL. Якщо на корені `/` 404 — відкрий свій реальний маршрут (наприклад, `/swagger`, `/api/todos` тощо).
+- Перевірити швидко:
+
+```powershell
+curl $(minikube service todoapi-service --url)/swagger
+```
+
+---
+
+## 7️⃣ Зупинка сервісу
+
+### 🛑 Зупинка Deployment
+
+```powershell
+kubectl delete deployment todoapi-deployment
+```
+
+### 🛑 Зупинка Service
+
+```powershell
+kubectl delete service todoapi-service
+```
+
+### 🛑 Або все разом
+
+```powershell
+kubectl delete -f todoapi-deployment.yaml
+kubectl delete -f todoapi-service.yaml
+```
+
+### 🔍 Перевірка, що все зупинено
+
+```powershell
+kubectl get deployments
+kubectl get pods
+kubectl get services
+```
+
+### 🔧 Масштабування API
+
+```powershell
+kubectl scale deployment todoapi-deployment --replicas=5
+```
 
 ---
 
@@ -149,12 +221,6 @@ minikube service todoapi-service
 - ✅ Навчилися деплоїти .NET API в Kubernetes
 - ✅ Зробили доступ через Service (NodePort)
 - ✅ Можемо масштабувати API
-
-### 🔧 Масштабування API
-
-```powershell
-kubectl scale deployment todoapi-deployment --replicas=5
-```
 
 ---
 
