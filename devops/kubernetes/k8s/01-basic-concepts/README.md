@@ -95,6 +95,23 @@ minikube status
 minikube dashboard
 ```
 
+#### Запуск з конкретним драйвером
+
+```bash
+# Hyper-V (Windows)
+minikube start --driver=hyperv --hyperv-virtual-switch "Default Switch"
+```
+
+```bash
+# VirtualBox
+minikube start --driver=virtualbox
+```
+
+```bash
+# Docker (Docker Desktop/WSL2)
+minikube start --driver=docker
+```
+
 #### Зупинка Minikube
 
 ```bash
