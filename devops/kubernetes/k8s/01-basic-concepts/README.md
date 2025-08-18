@@ -84,6 +84,20 @@ minikube status
 minikube dashboard
 ```
 
+#### Зупинка Minikube
+
+```bash
+# Зупинка кластера (зберігає стан і налаштування)
+minikube stop
+
+# Пауза/відновлення (щоб зменшити використання ресурсів)
+minikube pause
+minikube unpause
+
+# Повне видалення кластера і всіх даних (обережно!)
+minikube delete --all
+```
+
 ### Крок 3: Встановлення kubectl
 
 ```bash
