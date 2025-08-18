@@ -50,10 +50,14 @@ Kubernetes - це система оркестрації контейнерів, 
 ```bash
 # Завантаж та встанови Minikube
 winget install minikube
+```
 
+```bash
 # Або через Chocolatey
 choco install minikube
+```
 
+```bash
 # Або через Scoop
 scoop install minikube
 ```
@@ -68,6 +72,9 @@ brew install minikube
 ```bash
 # Завантаж та встанови
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+```
+
+```bash
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
 ```
 
@@ -76,10 +83,14 @@ sudo install minikube-linux-amd64 /usr/local/bin/minikube
 ```bash
 # Запуск кластера
 minikube start
+```
 
+```bash
 # Перевірка статусу
 minikube status
+```
 
+```bash
 # Включення dashboard (опціонально)
 minikube dashboard
 ```
@@ -89,11 +100,18 @@ minikube dashboard
 ```bash
 # Зупинка кластера (зберігає стан і налаштування)
 minikube stop
+```
 
+```bash
 # Пауза/відновлення (щоб зменшити використання ресурсів)
 minikube pause
-minikube unpause
+```
 
+```bash
+minikube unpause
+```
+
+```bash
 # Повне видалення кластера і всіх даних (обережно!)
 minikube delete --all
 ```
@@ -103,12 +121,20 @@ minikube delete --all
 ```bash
 # Windows (через winget)
 winget install -e --id Kubernetes.kubectl
+```
+
 
 # macOS
+```bash
 brew install kubectl
+```
 
 # Linux
+```bash
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+```
+
+```bash
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 ```
 
@@ -136,16 +162,24 @@ spec:
 ```bash
 # Застосування манифесту
 kubectl apply -f first-pod.yaml
+```
 
+```bash
 # Перевірка статусу Pod
 kubectl get pods
+```
 
+```bash
 # Детальна інформація про Pod
 kubectl describe pod nginx-pod
+```
 
+```bash
 # Логи Pod
 kubectl logs nginx-pod
+```
 
+```bash
 # Доступ до Pod через порт
 kubectl port-forward nginx-pod 8080:80
 ```
@@ -155,19 +189,36 @@ kubectl port-forward nginx-pod 8080:80
 ```bash
 # Перегляд ресурсів
 kubectl get pods
-kubectl get nodes
-kubectl get services
+```
 
+```bash
+kubectl get nodes
+```
+
+```bash
+kubectl get services
+```
+
+```bash
 # Детальна інформація
 kubectl describe pod <pod-name>
-kubectl describe node <node-name>
+```
 
+```bash
+kubectl describe node <node-name>
+```
+
+```bash
 # Логи
 kubectl logs <pod-name>
+```
 
+```bash
 # Виконання команд в Pod
 kubectl exec -it <pod-name> -- /bin/bash
+```
 
+```bash
 # Видалення ресурсу
 kubectl delete pod <pod-name>
 ```
