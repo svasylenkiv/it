@@ -1,0 +1,59 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "logs",
+            "Effect": "Allow",
+            "Action": [
+                "logs:PutLogEvents",
+                "logs:CreateLogStream",
+                "logs:CreateLogGroup"
+            ],
+            "Resource": "arn:aws:logs:*:*:log-group:/aws/lambda/${var.env}-email-processing-*"
+        },
+        {
+            "Sid": "ssm",
+            "Effect": "Allow",
+            "Action": [
+                "ssm:GetParametersByPath",
+                "ssm:GetParameters",
+                "ssm:GetParameter"
+            ],
+            "Resource": [
+                "arn:aws:ssm:*:*:parameter/repos/email-processing*",
+                "arn:aws:ssm:*:*:parameter/${var.env}/terraform/rds/caseglideawsdba*",
+                "arn:aws:ssm:*:*:parameter/${var.env}/rds/caseglide-db-dev*",
+                "arn:aws:ssm:*:*:parameter/${var.env}/email-processing*",
+                "arn:aws:ssm:*:*:parameter/${var.env}/caseglide/webapp/dsc/rds*",
+                "arn:aws:ssm:*:*:parameter/${var.env}/shared/caseglide-endpoints/primary"
+            ]
+        },
+        {
+            "Sid": "sqs",
+            "Effect": "Allow",
+            "Action": [
+                "sqs:SendMessage",
+                "sqs:ReceiveMessage",
+                "sqs:GetQueueAttributes",
+                "sqs:DeleteMessage"
+            ],
+            "Resource": "arn:aws:sqs:us-east-1:688550986040:${var.env}-email-processing-q-*"
+        },
+        {
+            "Sid": "s3",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:ListBucket",
+                "s3:GetObject",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::${var.env}-caseglide-document-repository/*",
+                "arn:aws:s3:::${var.env}-caseglide-document-repository",
+                "arn:aws:s3:::cg-repos-email-processing/*",
+                "arn:aws:s3:::cg-repos-email-processing"
+            ]
+        }
+    ]
+}
